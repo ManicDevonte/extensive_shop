@@ -469,34 +469,46 @@ function ToastStack({ toasts }) {
 function CookieConsent({ t, visible, onAccept, onDecline }) {
   if (!visible) return null;
   return (
-    <div className="fixed z-[90] bottom-0 inset-x-0 sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-md px-4 pb-4 sm:px-0">
-      <div className={`rounded-2xl sm:rounded-3xl p-5 ${t.glassStrong} border ${t.shadow} shadow-2xl`}>
-        <div className="flex items-start gap-3 mb-3">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-amber-500/15">
-            <ShieldCheck size={16} className="text-amber-600" />
+    <div className="fixed z-[90] bottom-0 inset-x-0 sm:bottom-5 sm:left-5 sm:right-auto sm:max-w-lg px-3 pb-3 sm:px-0 sm:pb-0">
+      <div className={`relative overflow-hidden rounded-[26px] ${t.glassStrong} border ${t.shadow} shadow-2xl`} style={{ animation: "privacyIn 500ms cubic-bezier(.22,1,.36,1) both" }}>
+        <div className="absolute -right-10 -top-12 h-32 w-32 rounded-full bg-amber-400/15 blur-2xl" />
+        <div className="relative p-5 sm:p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gray-900 text-amber-400 shadow-lg shadow-gray-900/20">
+                <ShieldCheck size={20} />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-600">Privacy, in plain English</p>
+                <p className="mt-1 text-base font-black tracking-tight">You’re in control.</p>
+              </div>
+            </div>
+            <span className={`hidden sm:inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold ${t.border} ${t.muted}`}>
+              <Sparkles size={11} className="text-amber-500" /> POPIA-aware
+            </span>
           </div>
-          <div>
-            <p className="text-sm font-bold mb-1">We value your privacy</p>
-            <p className={`text-xs leading-relaxed ${t.muted}`}>
-              We use cookies to keep your cart working, remember your preferences, and understand how shoppers use the site, in line with South Africa's POPIA. You can accept all cookies or continue with essentials only.
-            </p>
+
+          <p className={`mt-4 max-w-xl text-xs leading-relaxed ${t.muted}`}>
+            We use cookies to keep your cart working, remember your preferences, and improve the shop. Choose what feels right for you.
+          </p>
+
+          <div className="mt-4 grid grid-cols-2 gap-2 text-[10px] font-semibold">
+            <div className={`rounded-xl border px-3 py-2.5 ${t.border}`}><span className="mr-1.5 text-emerald-500">●</span>Cart & account essentials</div>
+            <div className={`rounded-xl border px-3 py-2.5 ${t.border}`}><span className="mr-1.5 text-amber-500">●</span>Helpful shopping insights</div>
           </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={onAccept}
-            className="flex-1 rounded-full bg-gray-900 text-white text-xs font-bold py-2.5 hover:opacity-90 transition-opacity"
-          >
-            Accept All
-          </button>
-          <button
-            onClick={onDecline}
-            className={`flex-1 rounded-full border text-xs font-bold py-2.5 ${t.hover}`}
-          >
-            Essentials Only
-          </button>
+
+          <div className="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:items-center">
+            <button onClick={onDecline} className={`flex-1 rounded-xl border px-4 py-3 text-xs font-bold transition-colors ${t.border} ${t.hover}`}>
+              Essentials only
+            </button>
+            <button onClick={onAccept} className="flex-1 rounded-xl bg-gray-900 px-4 py-3 text-xs font-bold text-white shadow-lg shadow-gray-900/20 transition-transform hover:-translate-y-0.5 hover:bg-gray-800">
+              Accept all cookies <span className="ml-1 text-amber-400">→</span>
+            </button>
+          </div>
+          <p className={`mt-3 text-[10px] ${t.muted}`}>Read our privacy policy for the full picture.</p>
         </div>
       </div>
+      <style>{`@keyframes privacyIn { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }`}</style>
     </div>
   );
 }
