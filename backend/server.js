@@ -15,11 +15,12 @@ const paypalBusinessEmail = process.env.PAYPAL_BUSINESS_EMAIL;
 
 const allowedOrigins = new Set([
   process.env.FRONTEND_URL || "http://localhost:5173",
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
   "http://localhost:5173",
   "http://127.0.0.1:5173",
   "http://localhost:8000",
   "http://127.0.0.1:8000",
-]);
+].filter(Boolean));
 app.use(cors({ origin: (origin, callback) => {
   if (!origin || allowedOrigins.has(origin)) return callback(null, true);
   return callback(new Error("Origin is not allowed"));
@@ -257,4 +258,8 @@ app.use((error, _req, res, _next) => {
   res.status(500).json({ message: "Something went wrong. Please try again." });
 });
 
-app.listen(port, () => console.log(`Auth API listening on http://localhost:${port}`));
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => console.log(`Auth API listening on http://localhost:${port}`));
+}
+
+export default app;

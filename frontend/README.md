@@ -1,13 +1,11 @@
 # Extensive Assortment
 
-A South African eCommerce prototype — a customer-facing storefront and an internal admin console, built as a single Vite + React app with two routes.
+A South African eCommerce storefront and internal admin console, backed by an Express API and Prisma database.
 
 - `/` — Storefront (home, categories, product detail, cart, checkout, account, tracking, comparison)
 - `/admin` — Admin console (products, orders, customers, coupons, flash sales, banners, shipping, reviews, notifications, team)
 
-## ⚠️ Important: this is a front-end prototype
-
-Both apps run entirely in the browser on **in-memory mock data** — there is no backend, no database, and no real authentication or payment processing. Every order, product edit, or coupon you create will reset the moment you refresh the page. See `SPEC.md`-style notes in the project (or the separate technical specification document, if you have it) for what a production backend would need to cover.
+The frontend is deployed as a Vite static build and uses the backend API for authentication, products, orders, shop content, and PayPal checkout.
 
 ## Getting started locally
 
@@ -76,12 +74,17 @@ vercel        # first deploy, follow the prompts
 vercel --prod # subsequent production deploys
 ```
 
-The included `vercel.json` makes sure refreshing `/admin` (or any deep link) doesn't 404 — Vercel needs that rewrite rule for any client-side-routed single-page app.
+The root `vercel.json` builds the frontend, deploys `backend/server.js` as a Node function, routes `/api/*` to the API, and preserves client-side routes such as `/admin`.
 
-## Known limitations to resolve before real production use
+Set these Vercel environment variables before deploying:
 
-- **No backend** — replace the in-memory `useState` data with real API calls (see the data model / API reference in the project's technical specification, if provided).
-- **No authentication** — the account dashboard and admin console are both open, unauthenticated.
-- **No live payments** — checkout's payment method selection is UI-only; wire up PayFast/Ozow/Yoco/Payflex webhooks server-side.
-- **Product photography** uses a mix of a bundled hero image and placeholder stock photos (`picsum.photos`) — swap in real product photos before launch.
-- **Admin uploads** (product photos) are stored as base64 in browser memory only — they won't persist or sync to the storefront without a real backend + object storage.
+- `DATABASE_URL`
+- `JWT_SECRET`
+- `FRONTEND_URL` (your production site URL)
+- `PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`, and optionally `PAYPAL_BUSINESS_EMAIL`
+
+## Production checks
+
+- Run `npm run prisma:validate` from `backend`.
+- Confirm the deployed `/api/health` endpoint returns `{ "ok": true }`.
+- Test signup, login, product loading, an admin-authenticated action, and PayPal credentials in the production environment.
